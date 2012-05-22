@@ -10,7 +10,7 @@
                     <?php echo CHtml::encode($comment->comment_text); ?>
                 </div>
                 <?php
-                if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false)) {
+                if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false) && count($comment->config)) {
                     echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->comment_id, 'class' => 'add-comment'));
                 }
                 ?>
