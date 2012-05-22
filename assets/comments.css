@@ -14,7 +14,7 @@ root {
 }
 
 .comments-list .admin-panel{
-    border: solid 1px grey;
+    display: inline;
     padding: 5px;
 }
 
