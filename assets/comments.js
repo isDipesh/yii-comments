@@ -3,11 +3,10 @@
  * @author Zasjadko Dmitry <segoddnja@gmail.com>
  */
 
-;
 (function($) {
     /**
 	 * commentsList set function.
-	 * @param options map settings for the comments list. Availablel options are as follows:
+	 * @param options map settings for the comments list. Available options are as follows:
 	 * - deleteConfirmString
          * - approveConfirmString
 	 */
@@ -82,34 +81,35 @@
             'resizable':false,
             'modal':true,
             'buttons':[
-                {
-                    text: $.fn.commentsList.settings[id]['postButton'],
-                    click: function(){
-                        $.fn.commentsList.postComment($(this));
-                    }
-                },
-                {
-                    text: $.fn.commentsList.settings[id]['cancelButton'],
-                    click: function(){
-                        $(this).dialog("close");
-                        return false;
-                    }
+            {
+                text: $.fn.commentsList.settings[id]['postButton'],
+                click: function(){
+                    $.fn.commentsList.postComment($(this));
                 }
+            },
+            {
+                text: $.fn.commentsList.settings[id]['cancelButton'],
+                click: function(){
+                    $(this).dialog("close");
+                    return false;
+                }
+            }
             ]
         });
     }
         
-    $.fn.commentsList.postComment = function($dialog){
+    $.fn.commentsList.postComment = function($dialog,id){
         var $form = $("form", $dialog);
+        id = (typeof id == 'undefined') ? $dialog.data('widgetID') : id;
         $.post(
             $form.attr("action"),
             $form.serialize()
             ).success(function(data){
             data = $.parseJSON(data);
             $dialog.html(data["form"]);
-            if(data["code"] == "success")
-            {
-                var id = $dialog.data('widgetID');
+            if(data["code"] == "success") {
+                //console.log(data["list"]);
+                console.log(id);
                 $('#'+id).html($(data["list"]).html());
                 $dialog.dialog("close");
             }

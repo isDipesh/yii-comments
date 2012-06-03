@@ -120,7 +120,7 @@ class CommentController extends Controller
                 {
                     $result['code'] = 'success';
                     $this->beginClip("list");
-                        $this->widget('comments.widgets.ECommentsListWidget', array(
+                        $this->widget('comments.widgets.Comments', array(
                             'model' => $comment->ownerModel,
                             'showPopupForm' => false,
                         ));

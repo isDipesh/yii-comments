@@ -28,11 +28,11 @@
                                 ), array('class' => 'delete'));
                         ?>
                     </div>
-            <?php endif; ?>
-        <?php if (count($comment->childs) > 0 && $this->allowSubcommenting === true) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs)); ?>
+                <?php endif; ?>
+                <?php if (count($comment->childs) > 0 && $this->allowSubcommenting === true) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs)); ?>
 
             </li>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
     </ul>
 <?php else: ?>
     <p><?php echo Yii::t('CommentsModule.msg', 'No comments'); ?></p>

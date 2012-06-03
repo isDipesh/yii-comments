@@ -2,10 +2,22 @@
 
 return array(
     'import' => array(
-      'application.modules.comments.widgets.*',  
+        'application.modules.comments.widgets.*',
+        'application.modules.page.models.*',
     ),
     'modules' => array(
         'comments' => array(
+            //the models for commenting
+            'commentableModels' => array(
+//                //model with individual settings
+//                'Page' => array(
+//                    'registeredOnly' => false,
+//                    'useCaptcha' => false,
+//                    'allowSubcommenting' => true,
+//                ),
+//            //model with default settings
+                'Page',
+            ),
             //you may override default config for all connecting models
             'defaultModelConfig' => array(
                 //only registered users can post comments
@@ -21,17 +33,6 @@ return array(
                 'isSuperuser' => 'Yii::app()->user->checkAccess("moderate")',
                 //order direction for comments
                 'orderComments' => 'ASC',
-            ),
-            //the models for commenting
-            'commentableModels' => array(
-                //model with individual settings
-                'Page' => array(
-                    'registeredOnly' => false,
-                    'useCaptcha' => false,
-                    'allowSubcommenting' => true,
-                ),
-            //model with default settings
-            //'Page',
             ),
             //config for user models, which is used in application
             'userConfig' => array(
