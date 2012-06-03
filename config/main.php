@@ -1,6 +1,9 @@
 <?php
 
 return array(
+    'import' => array(
+      'application.modules.comments.widgets.*',  
+    ),
     'modules' => array(
         'comments' => array(
             //you may override default config for all connecting models
