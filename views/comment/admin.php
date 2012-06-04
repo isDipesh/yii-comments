@@ -13,6 +13,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $model,
     'columns' => array(
         array(
+            'name' => 'comment_id',
+            'header' => 'ID',
+            'htmlOptions' => array('width' => 2)
+        ),
+        array(
             'name' => 'owner_name',
             'htmlOptions' => array('width' => 10),
         ),
@@ -54,12 +59,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'updateButtonImageUrl' => false,
             'buttons' => array(
                 'approve' => array(
+                    'visible' => '$data->status==Comment::STATUS_NOT_APPROVED',
                     'label' => Yii::t('CommentsModule.msg', 'Approve'),
                     'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
                     'options' => array('style' => 'margin-right: 5px;'),
                     'click' => 'function(){
-                                    if(confirm("' . Yii::t('CommentsModule.msg', 'Approve this comment?') . '"))
-                                    {
                                         $.post($(this).attr("href")).success(function(data){
                                             data = $.parseJSON(data);
                                             if(data["code"] === "success")
@@ -67,19 +71,51 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                                 $.fn.yiiGridView.update("comment-grid");
                                             }
                                         });
-                                    }
+                                    return false;
+                                }',
+                ),
+                'disapprove' => array(
+                    'visible' => '$data->status==Comment::STATUS_APPROVED',
+                    'label' => Yii::t('CommentsModule.msg', 'Disapprove'),
+                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::DISAPPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
+                    'options' => array('style' => 'margin-right: 5px;'),
+                    'click' => 'function(){
+                                        $.post($(this).attr("href")).success(function(data){
+                                            data = $.parseJSON(data);
+                                            if(data["code"] === "success")
+                                            {
+                                                $.fn.yiiGridView.update("comment-grid");
+                                            }
+                                        });
                                     return false;
                                 }',
                 ),
                 'delete' => array(
-                    'visible' => 'true',
+                    'visible' => '$data->status!=Comment::STATUS_DELETED',
                     'label' => Yii::t('CommentsModule.msg', 'Trash'),
                 ),
+                'restore' => array(
+                    'visible' => '$data->status==Comment::STATUS_DELETED',
+                    'label' => Yii::t('CommentsModule.msg', 'Restore'),
+                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
+                    'options' => array('style' => 'margin-right: 5px;'),
+                    'click' => 'function(){
+                                        $.post($(this).attr("href")).success(function(data){
+                                            data = $.parseJSON(data);
+                                            if(data["code"] === "success")
+                                            {
+                                                $.fn.yiiGridView.update("comment-grid");
+                                            }
+                                        });
+                                    return false;
+                                }',
+                ),
                 'update' => array(
+                    'visible' => 'true',
                     'label' => Yii::t('CommentsModule.msg', 'Edit'),
                 ),
             ),
-            'template' => '{approve}{delete} {update}',
+            'template' => '{approve} {disapprove} {delete} {restore} {update} ',
         ),
     ),
 ));

@@ -23,15 +23,21 @@ if (!isset($this->menu) || $this->menu === array())
     ?>
 
     <div class="row">
-        <?php echo $form->labelEx($model, 'userName'); ?>
-        <?php echo $form->textField($model, 'userName', array('size' => 60, 'maxlength' => 128)); ?>
-        <?php echo $form->error($model, 'userName'); ?>
+        <?php echo $form->labelEx($model, 'creator_id'); ?>
+        <?php echo $form->dropDownList($model, 'creator_id', array_merge(array('0' => 'None'), CHtml::listData(User::model()->findAll(), 'id', 'username'))); ?>
+        <?php echo $form->error($model, 'creator_id'); ?>
     </div>
 
     <div class="row">
-        <?php echo $form->labelEx($model, 'email'); ?>
-        <?php echo $form->textField($model, 'email', array('size' => 60, 'maxlength' => 128)); ?>
-        <?php echo $form->error($model, 'email'); ?>
+        <?php echo $form->labelEx($model, 'user_name'); ?>
+        <?php echo $form->textField($model, 'user_name', array('size' => 60, 'maxlength' => 128)); ?>
+        <?php echo $form->error($model, 'user_name'); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model, 'user_email'); ?>
+        <?php echo $form->textField($model, 'user_email', array('size' => 60, 'maxlength' => 128)); ?>
+        <?php echo $form->error($model, 'user_email'); ?>
     </div>
 
     <div class="row">
@@ -42,9 +48,24 @@ if (!isset($this->menu) || $this->menu === array())
 
     <div class="row">
         <?php echo $form->labelEx($model, 'status'); ?>
-        <?php echo $form->textField($model, 'status'); ?>
+        <?php echo $form->dropDownList($model, 'status', array('0' => 'Pending', '1' => 'Active', '2' => 'Trashed')); ?>
         <?php echo $form->error($model, 'status'); ?>
     </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model, 'parent_comment_id'); ?>
+        <?php
+        //show all comments but current one
+        $allModels = Comment::model()->findAll();
+        foreach ($allModels as $key => $aModel) {
+            if ($aModel->comment_id == $model->comment_id)
+                unset($allModels[$key]);
+        }
+        echo $form->dropDownList($model, 'parent_comment_id', CHtml::listData($allModels, 'comment_id', 'comment_id'), array('prompt' => 'None'));
+        ?>
+        <?php echo $form->error($model, 'parent_comment_id'); ?>
+    </div>
+
     <?php
     echo CHtml::submitButton(Yii::t('app', 'Save'));
     echo CHtml::Button(Yii::t('app', 'Cancel'), array(

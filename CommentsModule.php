@@ -28,7 +28,12 @@ class CommentsModule extends CWebModule {
      * approve comment action route
      */
     const APPROVE_ACTION_ROUTE = 'comments/comment/approve';
-
+    
+    /*
+     * disapprove comment action route
+     */
+    const DISAPPROVE_ACTION_ROUTE = 'comments/comment/disapprove';
+    
     /**
      * Commentable models
      * @var array commentableModels

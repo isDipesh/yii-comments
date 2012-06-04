@@ -88,9 +88,9 @@ class Comment extends CActiveRecord {
         //$modelConfig = $commentsModule->getModelConfig($this);
         $rules = array(
             array('owner_name, owner_id, comment_text', 'required'),
-            array('owner_id, parent_comment_id, creator_id, create_time, update_time, status', 'numerical', 'integerOnly' => true),
+            array('owner_id, parent_comment_id, create_time, update_time, status', 'numerical', 'integerOnly' => true),
             array('owner_name', 'length', 'max' => 50),
-            array('owner_name, creator_id, creator_name, user_name, user_email, verifyCode', 'checkConfig'),
+            array('owner_name, creator_name, user_name, user_email, verifyCode', 'checkConfig'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('owner_name, owner_id, comment_id, parent_comment_id, creator_id, user_name, user_email, comment_text, create_time, update_time, status', 'safe', 'on' => 'search'),
@@ -132,9 +132,9 @@ class Comment extends CActiveRecord {
         return array(
             'owner_name' => Yii::t('CommentsModule.msg', 'Owner'),
             'owner_id' => Yii::t('CommentsModule.msg', 'Owner ID'),
-            /* 'comment_id' => 'Comment',
-              'parent_comment_id' => 'Parent Comment',
-              'creator_id' => 'Creator', */
+            'comment_id' => 'Comment',
+            'parent_comment_id' => 'Parent Comment',
+            'creator_id' => 'Registered User',
             'user_name' => Yii::t('CommentsModule.msg', 'Display Name'),
             'user_email' => Yii::t('CommentsModule.msg', 'Email Address'),
             'comment_text' => Yii::t('CommentsModule.msg', 'Comment Text'),
@@ -363,6 +363,11 @@ class Comment extends CActiveRecord {
 
     public function setApproved() {
         $this->status = self::STATUS_APPROVED;
+        return $this->update();
+    }
+
+    public function setDisapproved() {
+        $this->status = self::STATUS_NOT_APPROVED;
         return $this->update();
     }
 

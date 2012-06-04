@@ -53,7 +53,7 @@ class CommentController extends Controller {
                 'users' => array('*'),
             ),
             array('allow',
-                'actions' => array('admin', 'delete', 'approve', 'update'),
+                'actions' => array('admin', 'delete', 'approve', 'update', 'disapprove'),
                 'users' => array('admin'),
             ),
             array('deny', // deny all users
@@ -63,8 +63,8 @@ class CommentController extends Controller {
     }
 
     /**
-     * Deletes a particular model.
-     * @param integer $id the ID of the model to be deleted
+     * Deletes a particular comment.
+     * @param integer $id the ID of the comment to be deleted
      */
     public function actionDelete($id) {
         // we only allow deletion via POST request
@@ -81,9 +81,21 @@ class CommentController extends Controller {
      * @param integer $id the ID of the model to be approve
      */
     public function actionApprove($id) {
-        // we only allow deletion via POST request
         $result = array('approvedID' => $id);
         if ($this->loadModel($id)->setApproved())
+            $result['code'] = 'success';
+        else
+            $result['code'] = 'fail';
+        echo CJSON::encode($result);
+    }
+
+    /**
+     * Disapproves a particular model.
+     * @param integer $id the ID of the model to be approve
+     */
+    public function actionDisapprove($id) {
+        $result = array('approvedID' => $id);
+        if ($this->loadModel($id)->setDisapproved())
             $result['code'] = 'success';
         else
             $result['code'] = 'fail';
@@ -106,17 +118,19 @@ class CommentController extends Controller {
 
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-
         if (isset($_POST['Comment'])) {
             $model->setAttributes($_POST['Comment']);
-            $model->parent = $_POST['Comment']['parent'];
-            $model->user = $_POST['Comment']['user'];
+            if ($_POST['Comment']['creator_id'] == 0) {
+                $model->creator_id = "NULL";
+            } else {
+                $model->creator_id = $_POST['Comment']['creator_id'];
+            }
             try {
                 if ($model->save()) {
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('view', 'id' => $model->id));
+                        $this->redirect(array('/comments'));
                     }
                 }
             } catch (Exception $e) {
