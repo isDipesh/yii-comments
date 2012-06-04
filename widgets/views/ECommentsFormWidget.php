@@ -29,7 +29,9 @@
         <div class="row">
             <?php echo $form->labelEx($newComment, 'user_email'); ?>
             <?php echo $form->textField($newComment, 'user_email', array('size' => 40)); ?>
+            <br/>The e-mail address shall not be revealed in the website. It is required so that we can notify you of replies.
         <?php echo $form->error($newComment, 'user_email'); ?>
+            
         </div>
 <?php endif; ?>
 

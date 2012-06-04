@@ -22,7 +22,7 @@
                         ?>
                     </div>
                     <div class="comment-header">
-                        <?php echo $comment->user_name; ?>
+                        <?php echo $comment->username; ?>
                         <?php echo Yii::app()->dateFormatter->formatDateTime($comment->create_time); ?>
                     </div>
 

@@ -58,9 +58,9 @@ class Comment extends CActiveRecord {
      */
     private $_ownerModel = false;
     private $_statuses = array(
-        self::STATUS_NOT_APPROWED => 'New',
-        self::STATUS_APPROWED => 'Approved',
-        self::STATUS_DELETED => 'Deleted'
+        self::STATUS_NOT_APPROWED => 'Pending',
+        self::STATUS_APPROWED => 'Active',
+        self::STATUS_DELETED => 'Trashed'
     );
 
     /**
@@ -130,13 +130,13 @@ class Comment extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'owner_name' => Yii::t('CommentsModule.msg', 'Commented object'),
-            'owner_id' => Yii::t('CommentsModule.msg', 'Commented object\'s ID'),
+            'owner_name' => Yii::t('CommentsModule.msg', 'Owner'),
+            'owner_id' => Yii::t('CommentsModule.msg', 'Owner ID'),
             /* 'comment_id' => 'Comment',
               'parent_comment_id' => 'Parent Comment',
               'creator_id' => 'Creator', */
-            'user_name' => Yii::t('CommentsModule.msg', 'User Name'),
-            'user_email' => Yii::t('CommentsModule.msg', 'User Email'),
+            'user_name' => Yii::t('CommentsModule.msg', 'Display Name'),
+            'user_email' => Yii::t('CommentsModule.msg', 'Email Address'),
             'comment_text' => Yii::t('CommentsModule.msg', 'Comment Text'),
             'create_time' => Yii::t('CommentsModule.msg', 'Create Time'),
             'update_time' => Yii::t('CommentsModule.msg', 'Update Time'),
@@ -287,18 +287,12 @@ class Comment extends CActiveRecord {
      */
 
     public function getUserName() {
-        $userName = '';
         if (isset($this->user)) {
             //if User model has been configured and comment posted by registered user
             $userConfig = Yii::app()->getModule('comments')->userConfig;
-            $userName .= $this->user->$userConfig['nameProperty'];
-            if (isset($userConfig['emailProperty']))
-                $userName .= '(' . $this->user->$userConfig['emailProperty'] . ')';
+            return $this->user->$userConfig['nameProperty'];
         }
-        else {
-            $userName = $this->user_name . '(' . $this->user_email . ')';
-        }
-        return $userName;
+        return $this->user_name;
     }
 
     /*
