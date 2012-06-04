@@ -53,7 +53,7 @@ class CommentController extends Controller {
                 'users' => array('*'),
             ),
             array('allow',
-                'actions' => array('admin', 'delete', 'approve'),
+                'actions' => array('admin', 'delete', 'approve', 'update'),
                 'users' => array('admin'),
             ),
             array('deny', // deny all users
@@ -102,6 +102,32 @@ class CommentController extends Controller {
         $this->render('admin', array(
             'model' => $model,
         ));
+    }
+    
+    public function actionUpdate($id) {
+        $model = $this->loadModel($id);
+        
+        if(isset($_POST['Comment'])) {
+            $model->setAttributes($_POST['Comment']);
+			$model->parent = $_POST['Comment']['parent'];
+			$model->user = $_POST['Comment']['user'];
+                try {
+                    if($model->save()) {
+                        if (isset($_GET['returnUrl'])) {
+                                $this->redirect($_GET['returnUrl']);
+                        } else {
+                                $this->redirect(array('view','id'=>$model->id));
+                        }
+                    }
+                } catch (Exception $e) {
+                        $model->addError('', $e->getMessage());
+                }
+
+            }
+
+        $this->render('update',array(
+                'model'=>$model,
+                ));
     }
 
     public function actionPostComment() {

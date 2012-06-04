@@ -3,7 +3,7 @@
 return array(
     'import' => array(
         'application.modules.comments.widgets.*',
-        'application.modules.page.models.*',
+        'application.modules.comments.models.*',
     ),
     'modules' => array(
         'comments' => array(
