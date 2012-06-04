@@ -36,3 +36,16 @@ root {
 .comments-list li .comment-header{
     font-weight: bold;
 }
+
+.gravatar{
+    float:left;
+    padding-right: 10px;
+}
+
+.comment{
+    height:90px;
+}
+
+.comment-footer{
+    vertical-align: baseline;
+}

@@ -25,6 +25,11 @@ class Comments extends ECommentsBaseWidget {
      * @var boolean allowSubcommenting
      */
     public $allowSubcommenting = true;
+    
+    /**
+     * @var boolean useGravatar
+     */
+    public $useGravatar = true;
 
     /**
      * @var boolean adminMode
@@ -38,6 +43,7 @@ class Comments extends ECommentsBaseWidget {
         parent::init();
         if (count($this->_config) > 0) {
             $this->allowSubcommenting = isset($this->_config['allowSubcommenting']) ? $this->_config['allowSubcommenting'] : $this->allowSubcommenting;
+            $this->useGravatar = isset($this->_config['useGravatar']) ? $this->_config['useGravatar'] : $this->useGravatar;
             if ($this->_config['isSuperuser'] !== '')
                 $this->adminMode = $this->evaluateExpression($this->_config['isSuperuser']);
         }

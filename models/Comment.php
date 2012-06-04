@@ -32,6 +32,7 @@ class Comment extends CActiveRecord {
     /*
      * Comment statuses
      */
+
     const STATUS_NOT_APPROWED = 0;
     const STATUS_APPROWED = 1;
     const STATUS_DELETED = 2;
@@ -46,28 +47,27 @@ class Comment extends CActiveRecord {
      * @var captcha action
      */
     public $captchaAction;
-    
+
     /*
      * Holds current model config
      */
     private $_config;
-    
+
     /*
      * Holds comments owner model
      */
     private $_ownerModel = false;
-    
     private $_statuses = array(
-        self::STATUS_NOT_APPROWED=>'New',
-        self::STATUS_APPROWED=>'Approved',
-        self::STATUS_DELETED=>'Deleted'
+        self::STATUS_NOT_APPROWED => 'New',
+        self::STATUS_APPROWED => 'Approved',
+        self::STATUS_DELETED => 'Deleted'
     );
 
     /**
      * Returns the static model of the specified AR class.
      * @return Comments the static model class
      */
-    public static function model($className=__CLASS__) {
+    public static function model($className = __CLASS__) {
         return parent::model($className);
     }
 
@@ -112,7 +112,7 @@ class Comment extends CActiveRecord {
         if (isset($userConfig['class']) && class_exists($userConfig['class'])) {
             $relations = array_merge($relations, array(
                 'user' => array(self::BELONGS_TO, $userConfig['class'], 'creator_id'),
-            ));
+                    ));
         }
         return $relations;
     }
@@ -132,9 +132,9 @@ class Comment extends CActiveRecord {
         return array(
             'owner_name' => Yii::t('CommentsModule.msg', 'Commented object'),
             'owner_id' => Yii::t('CommentsModule.msg', 'Commented object\'s ID'),
-            /*'comment_id' => 'Comment',
-            'parent_comment_id' => 'Parent Comment',
-            'creator_id' => 'Creator',*/
+            /* 'comment_id' => 'Comment',
+              'parent_comment_id' => 'Parent Comment',
+              'creator_id' => 'Creator', */
             'user_name' => Yii::t('CommentsModule.msg', 'User Name'),
             'user_email' => Yii::t('CommentsModule.msg', 'User Email'),
             'comment_text' => Yii::t('CommentsModule.msg', 'Comment Text'),
@@ -168,34 +168,31 @@ class Comment extends CActiveRecord {
         $criteria->compare('t.status', $this->status);
         $relations = $this->relations();
         //if User model has been configured
-        if(isset($relations['user']))
+        if (isset($relations['user']))
             $criteria->with = 'user';
 
         return new CActiveDataProvider($this, array(
                     'criteria' => $criteria,
-                    'pagination'=>array(
-                        'pageSize'=>30,
+                    'pagination' => array(
+                        'pageSize' => 30,
                     ),
                 ));
     }
-    
+
     /**
      * Checks config
      * This is the 'checkConfig' validator as declared in rules().
      */
     //public function checkConfig($attribute,$params)
-    public function checkConfig($attribute)
-    {
+    public function checkConfig($attribute) {
         //if owner_name class exists in configuration
-        if(count($this->config) === 0)
-        {
-            if($attribute === 'owner_name')
-                $this->addError ($attribute, Yii::t('CommentsModule.msg', 'Comments can\'t be added to this content.'));
-                return;
+        if (count($this->config) === 0) {
+            if ($attribute === 'owner_name')
+                $this->addError($attribute, Yii::t('CommentsModule.msg', 'Comments can\'t be added to this content.'));
+            return;
         }
         //if only registered users can post comments
-        if ($attribute === 'creator_id' && ($this->config['registeredOnly'] === true || Yii::app()->user->isGuest === false))
-        {
+        if ($attribute === 'creator_id' && ($this->config['registeredOnly'] === true || Yii::app()->user->isGuest === false)) {
             unset($this->user_email, $this->user_name);
             $numberValidator = new CNumberValidator();
             $numberValidator->allowEmpty = false;
@@ -205,8 +202,7 @@ class Comment extends CActiveRecord {
         }
 
         //if se captcha validation on posting
-        if ($attribute === 'verifyCode' && $this->config['useCaptcha'] === true)
-        {
+        if ($attribute === 'verifyCode' && $this->config['useCaptcha'] === true) {
             $captchaValidator = new CCaptchaValidator();
             $captchaValidator->caseSensitive = false;
             $captchaValidator->captchaAction = Yii::app()->urlManager->createUrl(CommentsModule::CAPTCHA_ACTION_ROUTE);
@@ -216,8 +212,7 @@ class Comment extends CActiveRecord {
         }
 
         //if not only registered users can post comments and current user is guest
-        if (($attribute === 'user_name' || $attribute === 'user_email') && ($this->config['registeredOnly'] === false && Yii::app()->user->isGuest === true))
-        {
+        if (($attribute === 'user_name' || $attribute === 'user_email') && ($this->config['registeredOnly'] === false && Yii::app()->user->isGuest === true)) {
             unset($this->creator_id);
             $requiredValidator = new CRequiredValidator();
             $requiredValidator->attributes = array($attribute);
@@ -226,8 +221,7 @@ class Comment extends CActiveRecord {
             $stringValidator->max = 128;
             $stringValidator->attributes = array($attribute);
             $stringValidator->validate($this);
-            if($attribute === 'user_email')
-            {
+            if ($attribute === 'user_email') {
                 $emailValidator = new CEmailValidator();
                 $emailValidator->attributes = array('user_email');
                 $emailValidator->validate($this);
@@ -244,18 +238,18 @@ class Comment extends CActiveRecord {
         $criteria = new CDbCriteria;
         $criteria->compare('owner_name', $this->owner_name);
         $criteria->compare('owner_id', $this->owner_id);
-        $criteria->compare('t.status', '<>'.self::STATUS_DELETED);
+        $criteria->compare('t.status', '<>' . self::STATUS_DELETED);
         $criteria->order = 'parent_comment_id, create_time ';
-        if (count($this->config)){
-        if($this->config['orderComments'] === 'ASC' || $this->config['orderComments'] === 'DESC')
-            $criteria->order .= $this->config['orderComments'];
-        //if premoderation is seted and current user isn't superuser
-        if($this->config['premoderate'] === true && $this->evaluateExpression($this->config['isSuperuser']) === false)
-            $criteria->compare('t.status', self::STATUS_APPROWED);
+        if (count($this->config)) {
+            if ($this->config['orderComments'] === 'ASC' || $this->config['orderComments'] === 'DESC')
+                $criteria->order .= $this->config['orderComments'];
+            //if premoderation is seted and current user isn't superuser
+            if ($this->config['premoderate'] === true && $this->evaluateExpression($this->config['isSuperuser']) === false)
+                $criteria->compare('t.status', self::STATUS_APPROWED);
         }
         $relations = $this->relations();
         //if User model has been configured
-        if(isset($relations['user']))
+        if (isset($relations['user']))
             $criteria->with = 'user';
         $comments = self::model()->findAll($criteria);
         return $this->buildTree($comments);
@@ -306,14 +300,28 @@ class Comment extends CActiveRecord {
         }
         return $userName;
     }
-    
+
+    /*
+     * returns the string, which represents email of the user that commented
+     * @return string
+     */
+
+    public function getEmail() {
+        if (isset($this->user)) {
+            //if User model has been configured and comment posted by registered user
+            $userConfig = Yii::app()->getModule('comments')->userConfig;
+            if (isset($userConfig['emailProperty']))
+                return $this->user->$userConfig['emailProperty'];
+        }
+        return $this->user_email;
+    }
+
     /*
      * @return array
      */
-    public function getConfig()
-    {
-        if($this->_config === null)
-        {
+
+    public function getConfig() {
+        if ($this->_config === null) {
             //get comments module
             $commentsModule = Yii::app()->getModule('comments');
             //get model config for comments module
@@ -321,96 +329,90 @@ class Comment extends CActiveRecord {
         }
         return $this->_config;
     }
-    
+
     /*
      * Returns comments owner model
      * @return CActiveRecord $model
      */
-    public function getOwnerModel()
-    {
-        if($this->_ownerModel === false)
-        {
-            if(is_array($primaryKey = $this->primaryKey()) === false)
+
+    public function getOwnerModel() {
+        if ($this->_ownerModel === false) {
+            if (is_array($primaryKey = $this->primaryKey()) === false)
                 $key = $this->owner_id;
             else
                 $key = array_combine($primaryKey, explode('.', $this->owner_id));
             $ownerModel = $this->owner_name;
 
-            if(class_exists($ownerModel))
+            if (class_exists($ownerModel))
                 $this->_ownerModel = $ownerModel::model()->findByPk($key);
-            else 
+            else
                 $this->_ownerModel = null;
         }
         return $this->_ownerModel;
     }
-    
+
     /*
      * Set comment and all his childs as deleted
      * @return boolean
      */
-    public function setDeleted()
-    {
-        /*todo add deleting for childs*/
+
+    public function setDeleted() {
+        /* todo add deleting for childs */
         $this->status = self::STATUS_DELETED;
         return $this->update();
-            
     }
-    
+
     /*
      * Sets comment as approved
      * @return boolean
      */
-    public function setApproved()
-    {
+
+    public function setApproved() {
         $this->status = self::STATUS_APPROWED;
         return $this->update();
-            
     }
-    
+
     /**
      * Get text representation of comment's status
      * @return string
      */
-    public function getTextStatus()
-    {
+    public function getTextStatus() {
         $this->status = $this->status === null ? 0 : $this->status;
         return Yii::t('CommentsModule.msg', $this->_statuses[$this->status]);
     }
-    
+
     /**
      * Generate data with statuses for dropDownList
      * @return array
      */
-    public function getStatuses()
-    {
+    public function getStatuses() {
         return $this->_statuses;
     }
-    
+
     /**
      * Get the link to page with this comment
      * @return string
      */
-    public function getPageUrl()
-    {
+    public function getPageUrl() {
         $config = $this->config;
         //if isset settings for comments page url
-        if(isset($config['pageUrl']) === true && is_array($config['pageUrl']) === true)
-        {
+        if (isset($config['pageUrl']) === true && is_array($config['pageUrl']) === true) {
             $ownerModel = $this->getOwnerModel();
             $routeData = array();
-            foreach($config['pageUrl']['data'] as $routeVar=>$modelProperty)
+            foreach ($config['pageUrl']['data'] as $routeVar => $modelProperty)
                 $routeData[$routeVar] = $ownerModel->$modelProperty;
-            return Yii::app()->urlManager->createUrl($config['pageUrl']['route'], $routeData)."#comment-$this->comment_id";
+            return Yii::app()->urlManager->createUrl($config['pageUrl']['route'], $routeData) . "#comment-$this->comment_id";
         }
         return null;
     }
-    
+
     /*
      * Set comment status base on owner model configuration
      */
+
     public function beforeSave() {
         //if current user is superuser, then automoderate comment and it's new comment
-        if($this->isNewRecord === true && $this->evaluateExpression($this->config['isSuperuser']) === true)
+        if ($this->isNewRecord === true && $this->evaluateExpression($this->config['isSuperuser']) === true)
             $this->status = self::STATUS_APPROWED;
         return parent::beforeSave();
     }

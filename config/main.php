@@ -26,13 +26,16 @@ return array(
                 //allow comment tree
                 'allowSubcommenting' => true,
                 //display comments after moderation
-                'premoderate' => false,
+                //'premoderate' => true,
                 //action for postig comment
                 'postCommentAction' => 'comments/comment/postComment',
                 //super user condition(display comment list in admin view and automoderate comments)
-                'isSuperuser' => 'Yii::app()->user->checkAccess("moderate")',
+                //must be string which is a PHP expression evaluating to boolean
+                'isSuperuser' => "Yii::app()->getModule('user')->isAdmin()",
                 //order direction for comments
-                'orderComments' => 'ASC',
+                'orderComments' => 'DESC',
+                //gravatar images?
+                'useGravatar' => true,
             ),
             //config for user models, which is used in application
             'userConfig' => array(
@@ -43,3 +46,5 @@ return array(
         ),
     ),
 );
+
+$c = new CWebUser();
