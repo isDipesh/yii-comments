@@ -68,8 +68,8 @@ class ECommentsBaseWidget extends CJuiWidget {
         $assets = Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('comments') . '/assets');
         $cs = Yii::app()->getClientScript();
         $cs->registerCssFile($assets . '/comments.css?' . time());
-        //$cs->registerScriptFile($assets . '/comments.js?' . time());
-        $cs->registerScriptFile($assets . '/comments.js?');
+        $cs->registerScriptFile($assets . '/comments.js?' . time());
+        //$cs->registerScriptFile($assets . '/comments.js?');
     }
 
     /*

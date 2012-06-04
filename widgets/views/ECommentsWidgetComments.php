@@ -38,7 +38,7 @@
                     <?php if ($this->adminMode === true): ?>
                         <div class="admin-panel">
                             <?php
-                            if ($comment->status === null || $comment->status == Comment::STATUS_NOT_APPROWED)
+                            if ($comment->status != Comment::STATUS_APPROVED)
                                 echo CHtml::link(Yii::t('CommentsModule.msg', 'Approve'), Yii::app()->urlManager->createUrl(
                                                 CommentsModule::APPROVE_ACTION_ROUTE, array('id' => $comment->comment_id)
                                         ), array('class' => 'approve'));

@@ -1,8 +1,7 @@
 <?php
 
 $this->breadcrumbs = array(
-    Yii::t('CommentsModule.msg', 'Comments') => array('index'),
-    Yii::t('CommentsModule.msg', 'Manage'),
+    Yii::t('CommentsModule.msg', 'Comments')
 );
 ?>
 

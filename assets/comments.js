@@ -106,10 +106,9 @@
             $form.serialize()
             ).success(function(data){
             data = $.parseJSON(data);
+            $('#messagePlaceholder').html(data['message']);
             $dialog.html(data["form"]);
             if(data["code"] == "success") {
-                //console.log(data["list"]);
-                console.log(id);
                 $('#'+id).html($(data["list"]).html());
                 $dialog.dialog("close");
             }

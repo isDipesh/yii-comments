@@ -4,6 +4,7 @@ return array(
     'import' => array(
         'application.modules.comments.widgets.*',
         'application.modules.comments.models.*',
+        'application.modules.page.models.*',
     ),
     'modules' => array(
         'comments' => array(
@@ -26,12 +27,12 @@ return array(
                 //allow comment tree
                 'allowSubcommenting' => true,
                 //display comments after moderation
-                //'premoderate' => true,
+                'premoderate' => true,
                 //action for postig comment
                 'postCommentAction' => 'comments/comment/postComment',
                 //super user condition(display comment list in admin view and automoderate comments)
                 //must be string which is a PHP expression evaluating to boolean
-                'isSuperuser' => "Yii::app()->getModule('user')->isAdmin()",
+                'isSuperuser' => 'Yii::app()->getModule("user")->isAdmin()',
                 //order direction for comments
                 'orderComments' => 'DESC',
                 //gravatar images?
@@ -46,5 +47,3 @@ return array(
         ),
     ),
 );
-
-$c = new CWebUser();

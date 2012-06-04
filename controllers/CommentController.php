@@ -103,31 +103,30 @@ class CommentController extends Controller {
             'model' => $model,
         ));
     }
-    
+
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
-        
-        if(isset($_POST['Comment'])) {
+
+        if (isset($_POST['Comment'])) {
             $model->setAttributes($_POST['Comment']);
-			$model->parent = $_POST['Comment']['parent'];
-			$model->user = $_POST['Comment']['user'];
-                try {
-                    if($model->save()) {
-                        if (isset($_GET['returnUrl'])) {
-                                $this->redirect($_GET['returnUrl']);
-                        } else {
-                                $this->redirect(array('view','id'=>$model->id));
-                        }
+            $model->parent = $_POST['Comment']['parent'];
+            $model->user = $_POST['Comment']['user'];
+            try {
+                if ($model->save()) {
+                    if (isset($_GET['returnUrl'])) {
+                        $this->redirect($_GET['returnUrl']);
+                    } else {
+                        $this->redirect(array('view', 'id' => $model->id));
                     }
-                } catch (Exception $e) {
-                        $model->addError('', $e->getMessage());
                 }
-
+            } catch (Exception $e) {
+                $model->addError('', $e->getMessage());
             }
+        }
 
-        $this->render('update',array(
-                'model'=>$model,
-                ));
+        $this->render('update', array(
+            'model' => $model,
+        ));
     }
 
     public function actionPostComment() {
@@ -136,6 +135,11 @@ class CommentController extends Controller {
             $comment->attributes = $_POST['Comment'];
             $result = array();
             if ($comment->save()) {
+                //if the comment status is approved or if premoderation is false, send success message
+                if ($comment->status === 1 || !$comment->config['premoderate'])
+                    $result['message'] = 'Your comment was successfully posted!';
+                else //send success + wait message
+                    $result['message'] = 'Your comment was successfully posted and will be visible only after it is moderated!';
                 $result['code'] = 'success';
                 $this->beginClip("list");
                 $this->widget('comments.widgets.Comments', array(
@@ -151,6 +155,7 @@ class CommentController extends Controller {
                 $result['list'] = $this->clips['list'];
             } else {
                 $result['code'] = 'fail';
+                $result['message'] = 'Your comment could not be posted because of errors!';
                 $this->beginClip('form');
                 $this->widget('comments.widgets.ECommentsFormWidget', array(
                     'model' => $comment->ownerModel,
