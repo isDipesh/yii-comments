@@ -51,9 +51,10 @@
                                         ), array('class' => 'delete'));
                                 ?>
                             </div>
+                        
+                    <?php endif; ?>
                         </div>
-                    </div>
-                <?php endif; ?>
+                </div>
                 <?php if (count($comment->childs) > 0 && $this->allowSubcommenting) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs)); ?>
 
             </li>
