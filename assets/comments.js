@@ -35,14 +35,14 @@
             })
             .delegate('.approve', 'click', function(){
                 var id = $($(this).parents('.comment-widget')[0]).attr("id");
-                if(confirm($.fn.commentsList.settings[id]['deleteConfirmString']))
+                if(confirm($.fn.commentsList.settings[id]['approveConfirmString']))
                 {
                     $.post($(this).attr('href'))
                     .success(function(data){
                         data = $.parseJSON(data);
                         if(data["code"] === "success")
                         {
-                            $("#comment-"+data["approvedID"]+" > .admin-panel > .approve").remove();
+                            $("#comment-"+data["approvedID"]+" > .comment > .comment-footer > .admin-panel > .approve").remove();
                         }
                     });
                 }

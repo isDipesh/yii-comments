@@ -198,7 +198,7 @@ class Comment extends CActiveRecord {
             return;
         }
         //if only registered users can post comments
-        if ($attribute === 'creator_id' && ($this->config['registeredOnly'] === true || Yii::app()->user->isGuest === false)) {
+        if ($attribute === 'creator_id' && ($this->config['registeredOnly'] || !Yii::app()->user->isGuest)) {
             unset($this->user_email, $this->user_name);
             $numberValidator = new CNumberValidator();
             $numberValidator->allowEmpty = false;
@@ -208,7 +208,7 @@ class Comment extends CActiveRecord {
         }
 
         //if se captcha validation on posting
-        if ($attribute === 'verifyCode' && $this->config['useCaptcha'] === true) {
+        if ($attribute === 'verifyCode' && $this->config['useCaptcha']) {
             $captchaValidator = new CCaptchaValidator();
             $captchaValidator->caseSensitive = false;
             $captchaValidator->captchaAction = Yii::app()->urlManager->createUrl(CommentsModule::CAPTCHA_ACTION_ROUTE);
@@ -218,7 +218,7 @@ class Comment extends CActiveRecord {
         }
 
         //if not only registered users can post comments and current user is guest
-        if (($attribute === 'user_name' || $attribute === 'user_email') && ($this->config['registeredOnly'] === false && Yii::app()->user->isGuest === true)) {
+        if (($attribute === 'user_name' || $attribute === 'user_email') && (!$this->config['registeredOnly'] && Yii::app()->user->isGuest)) {
             unset($this->creator_id);
             $requiredValidator = new CRequiredValidator();
             $requiredValidator->attributes = array($attribute);
@@ -250,7 +250,7 @@ class Comment extends CActiveRecord {
             if ($this->config['orderComments'] === 'ASC' || $this->config['orderComments'] === 'DESC')
                 $criteria->order .= $this->config['orderComments'];
             //if premoderation is seted and current user isn't superuser
-            if ($this->config['premoderate'] === true && $this->evaluateExpression($this->config['isSuperuser']) === false)
+            if ($this->config['premoderate'] && $this->evaluateExpression($this->config['isSuperuser']) === false)
                 $criteria->compare('t.status', self::STATUS_APPROVED);
         }
         $relations = $this->relations();
@@ -328,7 +328,7 @@ class Comment extends CActiveRecord {
         }
         return $this->_config;
     }
-    
+
     /*
      * Returns the number of comments for a particular model
      * @return integer $count
@@ -338,9 +338,9 @@ class Comment extends CActiveRecord {
         $max = Yii::app()->db->createCommand()
                 ->select('MAX(`count`)')
                 ->from($this->tableName())
-                ->where('owner_id=:owner_id AND owner_name=:owner_name', array(':owner_id'=>$owner_id, ':owner_name'=>$owner_name))
+                ->where('owner_id=:owner_id AND owner_name=:owner_name', array(':owner_id' => $owner_id, ':owner_name' => $owner_name))
                 ->queryScalar();
-        return $max+1;
+        return $max + 1;
     }
 
     /*

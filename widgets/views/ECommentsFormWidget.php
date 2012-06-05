@@ -35,9 +35,6 @@
             <br/>The e-mail address shall not be revealed in the website. It is required so that we can notify you of replies.
     <?php echo $form->error($newComment, 'user_email'); ?>
         </div>
-
-
-
 <?php endif; ?>
 
     <div class="row">
@@ -46,7 +43,7 @@
 <?php echo $form->error($newComment, 'comment_text'); ?>
     </div>
 
-        <?php if ($this->useCaptcha === true && extension_loaded('gd')): ?>
+        <?php if ($this->useCaptcha && extension_loaded('gd')): ?>
         <div class="row">
                 <?php echo $form->labelEx($newComment, 'verifyCode'); ?>
             <div>

@@ -37,7 +37,7 @@
                             echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->id, 'class' => 'add-comment'));
                         }
                         ?>
-                        <?php if ($this->adminMode === true): ?>
+                        <?php if ($this->adminMode): ?>
                             <div class="admin-panel">
                                 <?php
                                 if ($comment->status != Comment::STATUS_APPROVED)
