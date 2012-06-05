@@ -324,7 +324,6 @@ class Comment extends CActiveRecord {
         if ($this->_config === null) {
             //get comments module
             $commentsModule = Yii::app()->getModule('comments');
-            //get model config for comments module
             $this->_config = $commentsModule->getModelConfig($this->owner_name);
         }
         return $this->_config;

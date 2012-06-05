@@ -28,12 +28,12 @@ class CommentsModule extends CWebModule {
      * approve comment action route
      */
     const APPROVE_ACTION_ROUTE = 'comments/comment/approve';
-    
+
     /*
      * disapprove comment action route
      */
     const DISAPPROVE_ACTION_ROUTE = 'comments/comment/disapprove';
-    
+
     /**
      * Commentable models
      * @var array commentableModels
@@ -106,11 +106,14 @@ class CommentsModule extends CWebModule {
     public function getModelConfig($model) {
         $modelName = is_object($model) ? get_class($model) : $model;
         $modelConfig = array();
-        if (in_array($modelName, $this->commentableModels) || isset($this->commentableModels[$modelName])) {
-            $modelConfig = isset($this->commentableModels[$modelName]) ?
-                    array_merge($this->_defaultModelConfig, $this->commentableModels[$modelName]) :
-                    $this->_defaultModelConfig;
-        }
+        //if (in_array($modelName, $this->commentableModels) || isset($this->commentableModels[$modelName])) {
+        $modelConfig = CommentSetting::model()->findByAttributes(array('model' => $modelName)) ?
+                //$modelConfig = isset($this->commentableModels[$modelName]) ?
+                //array_merge($this->_defaultModelConfig, $this->commentableModels[$modelName]) 
+                array_merge(CommentSetting::model()->findByAttributes(array('model' => 'default'))->attributes, CommentSetting::model()->findByAttributes(array('model' => $modelName))->attributes) :
+                //$this->_defaultModelConfig;
+                CommentSetting::model()->findByAttributes(array('model' => 'default'))->attributes;
+        //}
         return $modelConfig;
     }
 

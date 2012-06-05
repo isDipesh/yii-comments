@@ -33,7 +33,7 @@
                     </div>
                     <div class="comment-footer">
                         <?php
-                        if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false) && count($comment->config)) {
+                        if ($this->allowSubcommenting && (!$this->registeredOnly || !Yii::app()->user->isGuest)) {
                             echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->id, 'class' => 'add-comment'));
                         }
                         ?>
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 <?php endif; ?>
-                <?php if (count($comment->childs) > 0 && $this->allowSubcommenting === true) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs)); ?>
+                <?php if (count($comment->childs) > 0 && $this->allowSubcommenting) $this->render('ECommentsWidgetComments', array('comments' => $comment->childs)); ?>
 
             </li>
         <?php endforeach; ?>
@@ -62,4 +62,3 @@
 <?php else: ?>
     <p><?php echo Yii::t('CommentsModule.msg', 'No comments'); ?></p>
 <?php endif; ?>
-
