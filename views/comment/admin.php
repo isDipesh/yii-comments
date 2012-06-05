@@ -26,6 +26,11 @@ $this->widget('zii.widgets.grid.CGridView', array(
             'htmlOptions' => array('width' => 10),
         ),
         array(
+            'name' => 'count',
+            'header' => '#',
+            'htmlOptions' => array('width' => 2),
+        ),
+        array(
             'name' => 'userName',
             'htmlOptions' => array('width' => 50),
         ),
@@ -35,7 +40,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
         array(
             'header' => Yii::t('CommentsModule.msg', 'Comment'),
-            'value' => 'CHtml::link(CHtml::link(Yii::t("CommentsModule.msg", "$data->comment_text"), $data->link, array("target"=>"_blank")))',
+            'value' => 'CHtml::link(CHtml::link(Yii::t("CommentsModule.msg", "$data->comment_text"), $data->link."#comment-".$data->count, array("target"=>"_blank")))',
             'type' => 'raw',
         ),
         array(

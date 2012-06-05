@@ -145,6 +145,7 @@ class Comment extends CActiveRecord {
             'update_time' => Yii::t('CommentsModule.msg', 'Update Time'),
             'status' => Yii::t('CommentsModule.msg', 'Status'),
             'link' => Yii::t('CommentsModule.msg', 'Link'),
+            'count' => Yii::t('CommentsModule.msg', 'Comment #'),
             'verifyCode' => Yii::t('CommentsModule.msg', 'Verification Code'),
         );
     }

@@ -55,6 +55,12 @@ if (!isset($this->menu) || $this->menu === array())
         <?php echo $form->textField($model, 'link', array('size' => 60)); ?>
         <?php echo $form->error($model, 'link'); ?>
     </div>
+    
+    <div class="row">
+        <?php echo $form->labelEx($model, 'count'); ?>
+        <?php echo $form->textField($model, 'count'); ?>
+        <?php echo $form->error($model, 'count'); ?>
+    </div>
 
     <div class="row">
         <?php echo $form->labelEx($model, 'parent_comment_id'); ?>

@@ -23,32 +23,34 @@
                     </div>
                     <div class="comment-header">
                         <?php echo $comment->username; ?>
-                        <?php echo Yii::app()->dateFormatter->formatDateTime($comment->create_time); ?>
+                        <a name="comment-<?php echo $comment->count; ?>">
+                            <?php echo Yii::app()->dateFormatter->formatDateTime($comment->create_time); ?>
+                        </a>
                     </div>
 
                     <div class="comment_text">
                         <?php echo CHtml::encode($comment->comment_text); ?>
                     </div>
                     <div class="comment-footer">
-                    <?php
-                    if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false) && count($comment->config)) {
-                        echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->comment_id, 'class' => 'add-comment'));
-                    }
-                    ?>
-                    <?php if ($this->adminMode === true): ?>
-                        <div class="admin-panel">
-                            <?php
-                            if ($comment->status != Comment::STATUS_APPROVED)
-                                echo CHtml::link(Yii::t('CommentsModule.msg', 'Approve'), Yii::app()->urlManager->createUrl(
-                                                CommentsModule::APPROVE_ACTION_ROUTE, array('id' => $comment->comment_id)
-                                        ), array('class' => 'approve'));
-                            ?>
-                            <?php
-                            echo CHtml::link(Yii::t('CommentsModule.msg', 'Delete'), Yii::app()->urlManager->createUrl(
-                                            CommentsModule::DELETE_ACTION_ROUTE, array('id' => $comment->comment_id)
-                                    ), array('class' => 'delete'));
-                            ?>
-                        </div>
+                        <?php
+                        if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false) && count($comment->config)) {
+                            echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->comment_id, 'class' => 'add-comment'));
+                        }
+                        ?>
+                        <?php if ($this->adminMode === true): ?>
+                            <div class="admin-panel">
+                                <?php
+                                if ($comment->status != Comment::STATUS_APPROVED)
+                                    echo CHtml::link(Yii::t('CommentsModule.msg', 'Approve'), Yii::app()->urlManager->createUrl(
+                                                    CommentsModule::APPROVE_ACTION_ROUTE, array('id' => $comment->comment_id)
+                                            ), array('class' => 'approve'));
+                                ?>
+                                <?php
+                                echo CHtml::link(Yii::t('CommentsModule.msg', 'Delete'), Yii::app()->urlManager->createUrl(
+                                                CommentsModule::DELETE_ACTION_ROUTE, array('id' => $comment->comment_id)
+                                        ), array('class' => 'delete'));
+                                ?>
+                            </div>
                         </div>
                     </div>
                 <?php endif; ?>
