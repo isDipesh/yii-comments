@@ -18,7 +18,7 @@
     <?php
     echo $form->hiddenField($newComment, 'owner_name');
     echo $form->hiddenField($newComment, 'owner_id');
-    echo $form->hiddenField($newComment, 'parent_comment_id', array('class' => 'parent_comment_id'));
+    echo $form->hiddenField($newComment, 'parent_id', array('class' => 'parent_id'));
     $newComment->link = $_SERVER['REQUEST_URI'];
     echo $form->hiddenField($newComment, 'link');
     ?>

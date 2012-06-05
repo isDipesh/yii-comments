@@ -1,7 +1,7 @@
 <?php if (count($comments) > 0): ?>
     <ul class="comments-list">
         <?php foreach ($comments as $comment): ?>
-            <li id="comment-<?php echo $comment->comment_id; ?>">
+            <li id="comment-<?php echo $comment->id; ?>">
                 <div class="comment">
                     <div class="gravatar">
                         <?php
@@ -34,7 +34,7 @@
                     <div class="comment-footer">
                         <?php
                         if ($this->allowSubcommenting === true && ($this->registeredOnly === false || Yii::app()->user->isGuest === false) && count($comment->config)) {
-                            echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->comment_id, 'class' => 'add-comment'));
+                            echo CHtml::link(Yii::t('CommentsModule.msg', 'Reply'), '#', array('rel' => $comment->id, 'class' => 'add-comment'));
                         }
                         ?>
                         <?php if ($this->adminMode === true): ?>
@@ -42,12 +42,12 @@
                                 <?php
                                 if ($comment->status != Comment::STATUS_APPROVED)
                                     echo CHtml::link(Yii::t('CommentsModule.msg', 'Approve'), Yii::app()->urlManager->createUrl(
-                                                    CommentsModule::APPROVE_ACTION_ROUTE, array('id' => $comment->comment_id)
+                                                    CommentsModule::APPROVE_ACTION_ROUTE, array('id' => $comment->id)
                                             ), array('class' => 'approve'));
                                 ?>
                                 <?php
                                 echo CHtml::link(Yii::t('CommentsModule.msg', 'Delete'), Yii::app()->urlManager->createUrl(
-                                                CommentsModule::DELETE_ACTION_ROUTE, array('id' => $comment->comment_id)
+                                                CommentsModule::DELETE_ACTION_ROUTE, array('id' => $comment->id)
                                         ), array('class' => 'delete'));
                                 ?>
                             </div>

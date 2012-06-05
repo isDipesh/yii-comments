@@ -18,8 +18,8 @@
  * The followings are the available columns in table '{{comments}}':
  * @property string $owner_name
  * @property integer $owner_id
- * @property integer $comment_id
- * @property integer $parent_comment_id
+ * @property integer $id
+ * @property integer $parent_id
  * @property integer $creator_id
  * @property string $user_name
  * @property string $user_email
@@ -90,13 +90,13 @@ class Comment extends CActiveRecord {
         //$modelConfig = $commentsModule->getModelConfig($this);
         $rules = array(
             array('owner_name, owner_id, comment_text', 'required'),
-            array('owner_id, parent_comment_id, create_time, update_time, status, count', 'numerical', 'integerOnly' => true),
+            array('owner_id, parent_id, create_time, update_time, status, count', 'numerical', 'integerOnly' => true),
             array('owner_name', 'length', 'max' => 50),
             array('owner_name, creator_name, user_name, user_email, verifyCode', 'checkConfig'),
             array('link, creator_id, count', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('owner_name, owner_id, comment_id, parent_comment_id, creator_id, user_name, user_email, comment_text, create_time, update_time, status, link', 'safe', 'on' => 'search'),
+            array('owner_name, owner_id, id, parent_id, creator_id, user_name, user_email, comment_text, create_time, update_time, status, link', 'safe', 'on' => 'search'),
         );
 
         return $rules;
@@ -107,8 +107,8 @@ class Comment extends CActiveRecord {
      */
     public function relations() {
         $relations = array(
-            'parent' => array(self::BELONGS_TO, 'Comment', 'parent_comment_id'),
-            'childs' => array(self::HAS_MANY, 'Comment', 'parent_comment_id'),
+            'parent' => array(self::BELONGS_TO, 'Comment', 'parent_id'),
+            'childs' => array(self::HAS_MANY, 'Comment', 'parent_id'),
         );
         $userConfig = Yii::app()->getModule('comments')->userConfig;
         //if defined in config class exists
@@ -135,8 +135,8 @@ class Comment extends CActiveRecord {
         return array(
             'owner_name' => Yii::t('CommentsModule.msg', 'Owner'),
             'owner_id' => Yii::t('CommentsModule.msg', 'Owner ID'),
-            'comment_id' => 'Comment',
-            'parent_comment_id' => 'Parent Comment',
+            'id' => 'Comment',
+            'parent_id' => 'Parent Comment',
             'creator_id' => 'Registered User',
             'user_name' => Yii::t('CommentsModule.msg', 'Display Name'),
             'user_email' => Yii::t('CommentsModule.msg', 'Email Address'),
@@ -162,8 +162,8 @@ class Comment extends CActiveRecord {
 
         $criteria->compare('owner_name', $this->owner_name, true);
         $criteria->compare('owner_id', $this->owner_id);
-        $criteria->compare('comment_id', $this->comment_id);
-        $criteria->compare('parent_comment_id', $this->parent_comment_id);
+        $criteria->compare('id', $this->id);
+        $criteria->compare('parent_id', $this->parent_id);
         $criteria->compare('creator_id', $this->creator_id);
         $criteria->compare('user_name', $this->user_name, true);
         $criteria->compare('user_email', $this->user_email, true);
@@ -245,7 +245,7 @@ class Comment extends CActiveRecord {
         $criteria->compare('owner_name', $this->owner_name);
         $criteria->compare('owner_id', $this->owner_id);
         $criteria->compare('t.status', '<>' . self::STATUS_DELETED);
-        $criteria->order = 'parent_comment_id, create_time ';
+        $criteria->order = 'parent_id, create_time ';
         if (count($this->config)) {
             if ($this->config['orderComments'] === 'ASC' || $this->config['orderComments'] === 'DESC')
                 $criteria->order .= $this->config['orderComments'];
@@ -277,10 +277,10 @@ class Comment extends CActiveRecord {
     private function buildTree(&$data, $rootID = 0) {
         $tree = array();
         foreach ($data as $id => $node) {
-            $node->parent_comment_id = $node->parent_comment_id === null ? 0 : $node->parent_comment_id;
-            if ($node->parent_comment_id == $rootID) {
+            $node->parent_id = $node->parent_id === null ? 0 : $node->parent_id;
+            if ($node->parent_id == $rootID) {
                 unset($data[$id]);
-                $node->childs = $this->buildTree($data, $node->comment_id);
+                $node->childs = $this->buildTree($data, $node->id);
                 $tree[] = $node;
             }
         }
@@ -420,7 +420,7 @@ class Comment extends CActiveRecord {
             $routeData = array();
             foreach ($config['pageUrl']['data'] as $routeVar => $modelProperty)
                 $routeData[$routeVar] = $ownerModel->$modelProperty;
-            return Yii::app()->urlManager->createUrl($config['pageUrl']['route'], $routeData) . "#comment-$this->comment_id";
+            return Yii::app()->urlManager->createUrl($config['pageUrl']['route'], $routeData) . "#comment-$this->id";
         }
         return null;
     }

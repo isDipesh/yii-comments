@@ -53,7 +53,7 @@
                 $dialog = $("#addCommentDialog-"+id);
                 var commentID = $(this).attr('rel');
                 if(commentID)
-                    $('.parent_comment_id', $dialog).val(commentID);
+                    $('.parent_id', $dialog).val(commentID);
                 $dialog.dialog("open");
                 return false;
             });

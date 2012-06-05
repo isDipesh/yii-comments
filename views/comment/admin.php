@@ -4,7 +4,9 @@ $this->breadcrumbs = array(
     Yii::t('CommentsModule.msg', 'Comments')
 );
 ?>
-
+<div class="right">
+    <?php echo CHtml::link(Yii::t('CommentsModule.msg', 'Comment Settings'), Yii::app()->createUrl('/comments/settings/')); ?>
+</div>
 <?php
 
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -13,7 +15,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
     'filter' => $model,
     'columns' => array(
         array(
-            'name' => 'comment_id',
+            'name' => 'id',
             'header' => 'ID',
             'htmlOptions' => array('width' => 2)
         ),
@@ -64,7 +66,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'approve' => array(
                     'visible' => '$data->status==Comment::STATUS_NOT_APPROVED',
                     'label' => Yii::t('CommentsModule.msg', 'Approve'),
-                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
+                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->id))',
                     'options' => array('style' => 'margin-right: 5px;'),
                     'click' => 'function(){
                                         $.post($(this).attr("href")).success(function(data){
@@ -80,7 +82,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'disapprove' => array(
                     'visible' => '$data->status==Comment::STATUS_APPROVED',
                     'label' => Yii::t('CommentsModule.msg', 'Disapprove'),
-                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::DISAPPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
+                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::DISAPPROVE_ACTION_ROUTE, array("id"=>$data->id))',
                     'options' => array('style' => 'margin-right: 5px;'),
                     'click' => 'function(){
                                         $.post($(this).attr("href")).success(function(data){
@@ -100,7 +102,7 @@ $this->widget('zii.widgets.grid.CGridView', array(
                 'restore' => array(
                     'visible' => '$data->status==Comment::STATUS_DELETED',
                     'label' => Yii::t('CommentsModule.msg', 'Restore'),
-                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->comment_id))',
+                    'url' => 'Yii::app()->urlManager->createUrl(CommentsModule::APPROVE_ACTION_ROUTE, array("id"=>$data->id))',
                     'options' => array('style' => 'margin-right: 5px;'),
                     'click' => 'function(){
                                         $.post($(this).attr("href")).success(function(data){
@@ -114,7 +116,6 @@ $this->widget('zii.widgets.grid.CGridView', array(
                                 }',
                 ),
                 'update' => array(
-                    'visible' => 'true',
                     'label' => Yii::t('CommentsModule.msg', 'Edit'),
                 ),
             ),

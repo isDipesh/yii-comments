@@ -28,8 +28,6 @@ return array(
                 'allowSubcommenting' => true,
                 //display comments after moderation
                 'premoderate' => false,
-                //action for postig comment
-                'postCommentAction' => 'comments/comment/postComment',
                 //super user condition(display comment list in admin view and automoderate comments)
                 //must be string which is a PHP expression evaluating to boolean
                 'isSuperuser' => 'Yii::app()->getModule("user")->isAdmin()',

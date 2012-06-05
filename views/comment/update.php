@@ -6,7 +6,7 @@ $this->breadcrumbs = array(
 );
 if (!isset($this->menu) || $this->menu === array())
     $this->menu = array(
-        array('label' => Yii::t('app', 'Delete'), 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->comment_id), 'confirm' => 'Are you sure you want to delete this item?')),);
+        array('label' => Yii::t('app', 'Delete'), 'url' => '#', 'linkOptions' => array('submit' => array('delete', 'id' => $model->id), 'confirm' => 'Are you sure you want to delete this item?')),);
 ?>
 
 <h1> <?php echo Yii::t('app', 'Edit Comment'); ?></h1>
@@ -63,17 +63,17 @@ if (!isset($this->menu) || $this->menu === array())
     </div>
 
     <div class="row">
-        <?php echo $form->labelEx($model, 'parent_comment_id'); ?>
+        <?php echo $form->labelEx($model, 'parent_id'); ?>
         <?php
         //show all comments but current one
         $allModels = Comment::model()->findAll();
         foreach ($allModels as $key => $aModel) {
-            if ($aModel->comment_id == $model->comment_id)
+            if ($aModel->id == $model->id)
                 unset($allModels[$key]);
         }
-        echo $form->dropDownList($model, 'parent_comment_id', CHtml::listData($allModels, 'comment_id', 'comment_id'), array('prompt' => 'None'));
+        echo $form->dropDownList($model, 'parent_id', CHtml::listData($allModels, 'id', 'id'), array('prompt' => 'None'));
         ?>
-        <?php echo $form->error($model, 'parent_comment_id'); ?>
+        <?php echo $form->error($model, 'parent_id'); ?>
     </div>
 
     <?php
