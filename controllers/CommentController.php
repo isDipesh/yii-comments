@@ -120,11 +120,8 @@ class CommentController extends Controller {
         $model = $this->loadModel($id);
         if (isset($_POST['Comment'])) {
             $model->setAttributes($_POST['Comment']);
-            if ($_POST['Comment']['creator_id'] == 0) {
+            if ($_POST['Comment']['creator_id'] == 0)
                 $model->creator_id = "NULL";
-            } else {
-                $model->creator_id = $_POST['Comment']['creator_id'];
-            }
             try {
                 if ($model->save()) {
                     if (isset($_GET['returnUrl'])) {
@@ -146,7 +143,8 @@ class CommentController extends Controller {
     public function actionPostComment() {
         if (isset($_POST['Comment']) && Yii::app()->request->isAjaxRequest) {
             $comment = new Comment();
-            $comment->attributes = $_POST['Comment'];
+            $comment->setAttributes($_POST['Comment']);
+            $comment->count = $comment->getCommentCount($_POST['Comment']['owner_name'],$_POST['Comment']['owner_id']);
             $result = array();
             if ($comment->save()) {
                 //if the comment status is approved or if premoderation is false, send success message

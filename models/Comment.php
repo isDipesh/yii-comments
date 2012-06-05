@@ -27,6 +27,8 @@
  * @property integer $create_time
  * @property integer $update_time
  * @property integer $status
+ * @property string $link
+ * 
  */
 class Comment extends CActiveRecord {
     /*
@@ -88,12 +90,13 @@ class Comment extends CActiveRecord {
         //$modelConfig = $commentsModule->getModelConfig($this);
         $rules = array(
             array('owner_name, owner_id, comment_text', 'required'),
-            array('owner_id, parent_comment_id, create_time, update_time, status', 'numerical', 'integerOnly' => true),
+            array('owner_id, parent_comment_id, create_time, update_time, status, count', 'numerical', 'integerOnly' => true),
             array('owner_name', 'length', 'max' => 50),
             array('owner_name, creator_name, user_name, user_email, verifyCode', 'checkConfig'),
+            array('link, creator_id, count', 'safe'),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
-            array('owner_name, owner_id, comment_id, parent_comment_id, creator_id, user_name, user_email, comment_text, create_time, update_time, status', 'safe', 'on' => 'search'),
+            array('owner_name, owner_id, comment_id, parent_comment_id, creator_id, user_name, user_email, comment_text, create_time, update_time, status, link', 'safe', 'on' => 'search'),
         );
 
         return $rules;
@@ -141,6 +144,7 @@ class Comment extends CActiveRecord {
             'create_time' => Yii::t('CommentsModule.msg', 'Create Time'),
             'update_time' => Yii::t('CommentsModule.msg', 'Update Time'),
             'status' => Yii::t('CommentsModule.msg', 'Status'),
+            'link' => Yii::t('CommentsModule.msg', 'Link'),
             'verifyCode' => Yii::t('CommentsModule.msg', 'Verification Code'),
         );
     }
@@ -166,6 +170,7 @@ class Comment extends CActiveRecord {
         $criteria->compare('create_time', $this->create_time);
         $criteria->compare('update_time', $this->update_time);
         $criteria->compare('t.status', $this->status);
+        $criteria->compare('t.link', $this->link);
         $relations = $this->relations();
         //if User model has been configured
         if (isset($relations['user']))
@@ -322,6 +327,20 @@ class Comment extends CActiveRecord {
             $this->_config = $commentsModule->getModelConfig($this->owner_name);
         }
         return $this->_config;
+    }
+    
+    /*
+     * Returns the number of comments for a particular model
+     * @return integer $count
+     */
+
+    public function getCommentCount($owner_name, $owner_id) {
+        $max = Yii::app()->db->createCommand()
+                ->select('MAX(`count`)')
+                ->from($this->tableName())
+                ->where('owner_id=:owner_id AND owner_name=:owner_name', array(':owner_id'=>$owner_id, ':owner_name'=>$owner_name))
+                ->queryScalar();
+        return $max+1;
     }
 
     /*

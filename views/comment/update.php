@@ -28,13 +28,11 @@ if (!isset($this->menu) || $this->menu === array())
         <?php echo $form->error($model, 'creator_id'); ?>
     </div>
 
+    The following two fields are for guest users, used only when the comment is attached to none of the registered users.
     <div class="row">
         <?php echo $form->labelEx($model, 'user_name'); ?>
         <?php echo $form->textField($model, 'user_name', array('size' => 60, 'maxlength' => 128)); ?>
         <?php echo $form->error($model, 'user_name'); ?>
-    </div>
-
-    <div class="row">
         <?php echo $form->labelEx($model, 'user_email'); ?>
         <?php echo $form->textField($model, 'user_email', array('size' => 60, 'maxlength' => 128)); ?>
         <?php echo $form->error($model, 'user_email'); ?>
@@ -50,6 +48,12 @@ if (!isset($this->menu) || $this->menu === array())
         <?php echo $form->labelEx($model, 'status'); ?>
         <?php echo $form->dropDownList($model, 'status', array('0' => 'Pending', '1' => 'Active', '2' => 'Trashed')); ?>
         <?php echo $form->error($model, 'status'); ?>
+    </div>
+
+    <div class="row">
+        <?php echo $form->labelEx($model, 'link'); ?>
+        <?php echo $form->textField($model, 'link', array('size' => 60)); ?>
+        <?php echo $form->error($model, 'link'); ?>
     </div>
 
     <div class="row">

@@ -27,7 +27,7 @@ return array(
                 //allow comment tree
                 'allowSubcommenting' => true,
                 //display comments after moderation
-                'premoderate' => true,
+                'premoderate' => false,
                 //action for postig comment
                 'postCommentAction' => 'comments/comment/postComment',
                 //super user condition(display comment list in admin view and automoderate comments)
