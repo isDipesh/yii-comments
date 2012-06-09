@@ -1,27 +1,35 @@
-yii-comments
-=======================
+# yii-comments
 
-yii-comments is a module for Yii Framework which allows you to make any instance of CActiveRecord commentable.
+yii-comments is a module for Yii Framework which allows you to make any instance of CActiveRecord commentable.  
+This is a modification of the comments module available from <http://www.yiiframework.com/extension/comments-module/>  
+It is supposed that you have user module installed.
 
-This is a modification of the comments module available from http://www.yiiframework.com/extension/comments-module/
+# Changes
 
-Changes
-=======================
 Added Gravatar Support  
 Better Comment Management  
 Admin interface for editing comments  
 Admin interface for comments settings  
 Anchor for each comments (e.g. http://example.com/page/1#comment-12)  
 Better User Interaction  
-and others.  
+and others.
 
-Installation
-=======================
+# Installation
 
-Extract the contents to `comments` folder inside modules.  
+### Via Git:
 
-Execute the following SQL queries to create table and insert default comment settings.  
-`
+From inside the modules directory in your application:
+
+    git clone https://github.com/xtranophilist/yii-comments.git
+    mv yii-comments comments
+    
+
+OR  
+Download : <https://github.com/xtranophilist/yii-comments/zipball/master>  
+Extract the contents and move to `comments` folder inside modules.
+
+Execute the following SQL queries to create table and insert default comment settings.
+
         CREATE TABLE IF NOT EXISTS `comment` (
         `id` int(12) NOT NULL AUTO_INCREMENT,
         `owner_id` int(11) NOT NULL,
@@ -38,7 +46,7 @@ Execute the following SQL queries to create table and insert default comment set
         `link` text,
         PRIMARY KEY (`id`)
         );
-
+    
         CREATE TABLE IF NOT EXISTS `comment_setting` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `model` varchar(50) NOT NULL,
@@ -51,11 +59,10 @@ Execute the following SQL queries to create table and insert default comment set
         `useGravatar` tinyint(1) NOT NULL DEFAULT '1',
         PRIMARY KEY (`id`)
         );
-
+    
         INSERT INTO `comment_setting` (`id`, `model`, `registeredOnly`, `useCaptcha`, `allowSubcommenting`, `premoderate`, `isSuperuser`, `orderComments`, `useGravatar`) VALUES
         (1, 'default', 0, 0, 1, 1, 'Yii::app()->getModule("user")->isAdmin()', 'ASC', 1);
-`
-
+    
 
 Edit config/main.php:
 
@@ -75,16 +82,10 @@ Edit config/main.php:
                     ),
                 ),
         ),
+    
 
+# Usage:
 
-Usage:
-=======================
-
-Add
-`
-$this->widget('Comments', array('model' => $model));
-`
-to the view of any model to make it commentable.
-
+Add `$this->widget('Comments', array('model' => $model));` to the view of any model to make it commentable.
 
 Go to /comments to manage comments and to play with the settings.
