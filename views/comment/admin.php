@@ -1,14 +1,17 @@
 <?php
-
 $this->breadcrumbs = array(
     Yii::t('CommentsModule.msg', 'Comments')
 );
+$this->menu = array(
+    array('label' => Yii::t('CommentsModule.msg', 'All Comments')),
+    array('label' => Yii::t('CommentsModule.msg', 'Active Comments'), 'url' => array('/comments/settings')),
+    array('label' => Yii::t('CommentsModule.msg', 'Comment Settings'), 'url' => array('/comments/settings')),
+);
 ?>
 <div class="right">
-    <?php echo CHtml::link(Yii::t('CommentsModule.msg', 'Comment Settings'), Yii::app()->createUrl('/comments/settings/')); ?>
+    <?php echo CHtml::link(Yii::t('CommentsModule.msg', 'Comment Settings'), Yii::app()->createUrl('comments/settings/')); ?>
 </div>
 <?php
-
 $this->widget('zii.widgets.grid.CGridView', array(
     'id' => 'comment-grid',
     'dataProvider' => $model->search(),

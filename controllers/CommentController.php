@@ -115,6 +115,17 @@ class CommentController extends Controller {
             'model' => $model,
         ));
     }
+    
+    public function actionActive() {
+        $model = Comment::model()->findByAttributes(array(''));
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Comment']))
+            $model->attributes = $_GET['Comment'];
+
+        $this->render('admin', array(
+            'model' => $model,
+        ));
+    }
 
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
