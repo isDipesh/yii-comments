@@ -11,7 +11,7 @@
  */
 class CommentController extends Controller {
 
-    public $defaultAction = 'admin';
+    public $defaultAction = 'manage';
 
     /**
      * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -28,7 +28,7 @@ class CommentController extends Controller {
             'ajaxOnly + PostComment, Delete, Approve',
         );
     }
-
+    
     /**
      * Declares class-based actions.
      */
@@ -36,7 +36,7 @@ class CommentController extends Controller {
         return array(
             'captcha' => array(
                 'class' => 'CCaptchaAction',
-                'backColor' => 0xFFFFFF,
+                'backColor' => 0xAAAAAA,
             ),
         );
     }
@@ -53,7 +53,7 @@ class CommentController extends Controller {
                 'users' => array('*'),
             ),
             array('allow',
-                'actions' => array('admin', 'delete', 'approve', 'update', 'disapprove'),
+                'actions' => array('manage', 'delete', 'approve', 'update', 'disapprove'),
                 'users' => array('admin'),
             ),
             array('deny', // deny all users
@@ -105,24 +105,12 @@ class CommentController extends Controller {
     /**
      * Manages all models.
      */
-    public function actionAdmin() {
+    public function actionManage() {
         $model = new Comment('search');
         $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Comment']))
-            $model->attributes = $_GET['Comment'];
-
-        $this->render('admin', array(
-            'model' => $model,
-        ));
-    }
-    
-    public function actionActive() {
-        $model = Comment::model()->findByAttributes(array(''));
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Comment']))
-            $model->attributes = $_GET['Comment'];
-
-        $this->render('admin', array(
+        if (isset($_GET['status']))
+            $model->status = $_GET['status'];
+        $this->render('manage', array(
             'model' => $model,
         ));
     }
@@ -155,7 +143,7 @@ class CommentController extends Controller {
         if (isset($_POST['Comment']) && Yii::app()->request->isAjaxRequest) {
             $comment = new Comment();
             $comment->setAttributes($_POST['Comment']);
-            $comment->count = $comment->getCommentCount($_POST['Comment']['owner_name'],$_POST['Comment']['owner_id']);
+            $comment->count = $comment->getCommentCount($_POST['Comment']['owner_name'], $_POST['Comment']['owner_id']);
             $result = array();
             if ($comment->save()) {
                 //if the comment status is approved or if premoderation is false, send success message

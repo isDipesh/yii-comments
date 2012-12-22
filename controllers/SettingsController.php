@@ -16,10 +16,9 @@ class SettingsController extends Controller {
     public function accessRules() {
         return array(
             array('allow',
-                'actions' => array('create', 'delete', 'index', 'update', 'toggle'),
                 'users' => array('admin'),
             ),
-            array('deny', // deny all users
+            array('deny',
                 'users' => array('*'),
             ),
         );
@@ -81,7 +80,7 @@ class SettingsController extends Controller {
             }
 
             if (!Yii::app()->getRequest()->getIsAjaxRequest()) {
-                $this->redirect(array('admin'));
+                $this->redirect(array('manage'));
             }
         }
         else
@@ -118,7 +117,7 @@ class SettingsController extends Controller {
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
             if (!isset($_GET['ajax']))
-                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
         }
         else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');

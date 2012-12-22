@@ -3,12 +3,19 @@ $this->breadcrumbs = array(
     Yii::t('app', 'Comments') => array('/comments'),
     Yii::t('app', 'Settings'),
 );
+$this->menu = array(
+    array('label' => Yii::t('CommentsModule.msg', 'All Comments'), 'url' => array('/comments')),
+    array('label' => Yii::t('CommentsModule.msg', 'Active Comments'), 'url' => Yii::app()->createUrl('comments/manage?status=1')),
+    array('label' => Yii::t('CommentsModule.msg', 'Pending Comments'), 'url' => Yii::app()->createUrl('comments/manage?status=0')),
+    array('label' => Yii::t('CommentsModule.msg', 'Trash'), 'url' => Yii::app()->createUrl('comments/manage?status=2')),
+    array('label' => Yii::t('CommentsModule.msg', 'Comment Settings')),
+);
 ?>
 
 
-
-<div class="right">
-    <?php echo CHtml::link('Create Settings for a Model', Yii::app()->createUrl('/comments/settings/create')); ?>
+<h1>Comment Settings</h1>
+<div>
+    <?php echo CHtml::link('Create Settings for a Model', Yii::app()->createUrl('comments/settings/create')); ?>
 </div>
 <?php
 $this->widget('zii.widgets.grid.CGridView', array(
@@ -68,4 +75,5 @@ $this->widget('zii.widgets.grid.CGridView', array(
         ),
     ),
 ));
+
 ?>
