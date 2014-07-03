@@ -4,6 +4,8 @@ yii-comments is a module for Yii Framework which allows you to make any instance
 This is a modification of the comments module available from <http://www.yiiframework.com/extension/comments-module/>  
 It is supposed that you have user module installed.
 
+**[Note: This extension isn't maintained any more.]**
+
 # Changes
 
 Added Gravatar Support  
